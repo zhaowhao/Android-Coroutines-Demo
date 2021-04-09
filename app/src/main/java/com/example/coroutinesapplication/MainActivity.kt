@@ -18,6 +18,11 @@ class MainActivity : AppCompatActivity() {
 
         val iv_bitmap_with_watermark = findViewById<ImageView>(R.id.iv_bitmap_with_watermark)
 
+        /**
+         * 协程测试
+         * 顺序：从网络下载图片 -> 对下载图片加水印 -> 放置到imageview上
+         *
+         */
         CoroutineScope(Dispatchers.Main).launch {
             val bitmap = getImageFromNetwork()
             val bitmapWithWatermark = createWatermark(bitmap, "CHIU")
@@ -26,6 +31,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * 从网络下载图片
+     * 协程测试 耗时操作1
+     */
     private suspend fun getImageFromNetwork() = withContext(Dispatchers.IO) {
         val url = URL("https://static.wikia.nocookie.net/dogelore/images/9/97/Doge.jpg/revision/latest?cb=20190205113053")
         val connection = url.openConnection() as URLConnection
@@ -33,6 +42,10 @@ class MainActivity : AppCompatActivity() {
         BitmapFactory.decodeStream(inputStream)
     }
 
+    /**
+     * 对下载的图片加水印
+     * 协程测试 耗时操作2
+     */
     private suspend fun createWatermark(bitmap: Bitmap, mark: String) = withContext(Dispatchers.IO) {
         val w = bitmap.width
         val h = bitmap.height
